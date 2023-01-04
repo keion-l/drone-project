@@ -37,12 +37,34 @@ MMA8452Q accel;              // create instance of the MMA8452 class
 
 // light set up
 
-int LED = 13;
+int LED_UP = 13;
+int LED_DOWN = 8;
+int LED_LEFT = 2;
+int LED_RIGHT = 7;
+int LED_FLAT = 12;
+
+int LED_ARR [] = {
+  LED_UP,
+  LED_DOWN,
+  LED_LEFT,
+  LED_RIGHT,
+  LED_FLAT
+};
+
 
 void setup() {
   Serial.begin(9600);
   Serial.println("MMA8452Q Basic Reading Code!");
-  pinMode(LED, OUTPUT);
+  
+  pinMode(LED_UP, OUTPUT);
+  pinMode(LED_DOWN, OUTPUT);
+
+  pinMode(LED_RIGHT, OUTPUT);
+  pinMode(LED_LEFT, OUTPUT);
+
+  pinMode(LED_FLAT, OUTPUT);
+
+
   Wire.begin();
 
   if (accel.begin() == false) {
@@ -57,22 +79,38 @@ void loop() {
 
     if (accel.isUp()) {
       Serial.print("Tilted Up");
+      digitalWrite(LED_UP, HIGH);
+    } else {
+        digitalWrite(LED_UP, LOW);
     }
 
     if (accel.isDown()) {
       Serial.print("Tilted Down");
+      digitalWrite(LED_DOWN, HIGH);
+    } else {
+      digitalWrite(LED_DOWN, LOW);
     }
+
     if (accel.isLeft()) {
       Serial.print("Tilted Left");
+      digitalWrite(LED_LEFT, HIGH);
+    } else {
+      digitalWrite(LED_LEFT, LOW);
     }
+
+
     if (accel.isRight()) {
       Serial.print("Tilted Right");
+      digitalWrite(LED_RIGHT, HIGH);
+    } else {
+      digitalWrite(LED_RIGHT, LOW);
     }
+
     if (accel.isFlat()) {
       Serial.print("Flat");
-      digitalWrite(LED, HIGH);
+      digitalWrite(LED_FLAT, HIGH);
     } else {
-      digitalWrite(LED, LOW);
+      digitalWrite(LED_FLAT, LOW);
     }
 
 
