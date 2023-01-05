@@ -40,9 +40,5 @@ Rules from source:
 
 ******************************************************************************/
 
-#include "Class_PIDControl.h"
-
-PID_Control::PID_Control(float pitchValue, float rollValue, float yawValue) {
 
 
-}

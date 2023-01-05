@@ -12,7 +12,7 @@ enum BMP180_Register
   REG_CONTROL = 0xF4,
   REG_RESULT = 0xF6,
   TEMPERATURE = 0x2E,
-  PRESSURE_OSS_0 = 20x34,
+  PRESSURE_OSS_0 = 0x34,
   PRESSURE_OSS_1 = 0x74,
   PRESSURE_OSS_2 = 0xB4,
   PRESSURE_OSS_3 = 0xF4
@@ -24,10 +24,11 @@ enum BMP180_Register
 class BMP180
 {
   public:
-    BMP180(byte addr = BMP180_DEFAULT_ADDRESS); // Constructor
+    BMP180(byte addr = BMP180_ADDR); // Constructor
 
 
-    bool begin(TwoWire &wirePort = Wire, uint8_t deviceAddress = BMP180_DEFAULT_ADDRESS);
+    bool begin(TwoWire &wirePort = Wire, uint8_t deviceAddress = BMP180_ADDR);
+    byte init();
 
     char startTemperature(void);
     char getTemperature(double &T);

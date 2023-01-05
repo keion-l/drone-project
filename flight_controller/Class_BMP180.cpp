@@ -9,7 +9,7 @@ BMP180::BMP180(byte addr)
 	_deviceAddress = addr; // Store address into private variable
 }
 
-char BMP180::begin(TwoWire &wirePort, uint8_t deviceAddress)
+bool BMP180::begin(TwoWire &wirePort, uint8_t deviceAddress)
 {
   _deviceAddress = deviceAddress;
 	_i2cPort = &wirePort;
@@ -59,13 +59,32 @@ char BMP180::begin(TwoWire &wirePort, uint8_t deviceAddress)
 
 }
 
-BMP180::readInt(char address, int16_t &value)
+// INITIALIZATION
+//	This function initializes the MMA8452Q. It sets up the scale (either 2, 4,
+//	or 8g), output data rate, portrait/landscape detection and tap detection.
+//	It also checks the WHO_AM_I register to make sure we can communicate with
+//	the sensor. Returns a 0 if communication failed, 1 if successful.
+byte BMP180::init()
+{
+
+	if (_i2cPort == NULL)
+	{
+		_i2cPort = &Wire;
+	}
+
+	_i2cPort->begin(); // Initialize I2C
+
+
+	return 1;
+}
+
+char BMP180::readInt(char address, int16_t &value)
 {
   unsigned char data[2];
 
   data[0] = address;
 
-  if (readBytes(data), 2)) {
+  if (readBytes(data,2)) {
     value = (int16_t)((data[0]<<8)|data[1]);
     return(1);
   }
@@ -93,7 +112,7 @@ char BMP180::readBytes(unsigned char *values, char length)
   char x;
 
   Wire.beginTransmission(BMP180_ADDR);
-  Wire.writeValues([0]);
+  Wire.write(values[0]);
 
   _error = Wire.endTransmission();
 
@@ -116,7 +135,7 @@ char BMP180::writeBytes(unsigned char *values, char length)
   Wire.write(values, length);
   _error = Wire.endTransmission();
   if (_error == 0){
-    return (1)
+    return (1);
   }
   return(0);
 }
@@ -159,7 +178,7 @@ char BMP180::getTemperature(double &T)
 
 char BMP180::startPressure(char oversampling)
 {
-  unsiged char data[2], result, delay;
+  unsigned char data[2], result, delay;
 
   data[0] = REG_CONTROL;
 
@@ -227,7 +246,7 @@ double BMP180::getAltitude(double P, double P0)
   return(44330.0*(1-pow(P/P0,1/5.255)));
 }
 
-char SFE_BMP180::getError(void)
+char BMP180::getError(void)
 	// If any library command fails, you can retrieve an extended
 	// error code using this command. Errors are from the wire library: 
 	// 0 = Success
